@@ -18,6 +18,8 @@ func Hello(name string) (string, error) {
 	return message, nil
 }
 
+// := declaration plus assignment
+// = assignment
 func Hellos(names []string) (map[string]string, error) {
 	// create empty array map(key-type) val-type)
 	messages := make(map[string]string)
