@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"html/template"
 	"log"
 	"net/http"
 	"os"
@@ -14,6 +14,7 @@ type Page struct {
 
 func main() {
 	http.HandleFunc("/view/", viewHandler)
+	http.HandleFunc("/edit/", editHandler)
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
 
@@ -37,5 +38,25 @@ func viewHandler(w http.ResponseWriter, r *http.Request) {
 	title := r.URL.Path[len("/view/"):]
 	p, _ := loadPage(title)
 
-	fmt.Fprintf(w, "<h1>%s</h1><div>%s</div", p.Title, p.Body)
+	renderTemplate(w, "view", p)
+}
+
+func editHandler(w http.ResponseWriter, r *http.Request) {
+	title := r.URL.Path[len("/edit/"):]
+	p, err := loadPage(title)
+
+	if err != nil {
+		p = &Page{Title: title}
+	}
+
+	renderTemplate(w, "edit", p)
+}
+
+// &Reference // memory address location 0x7ffe5367e044
+// *type pointer variable
+// eg. *Page = &page
+// If not in the declaration * is the dereference operator
+func renderTemplate(w http.ResponseWriter, tmpl string, p *Page) {
+	t, _ := template.ParseFiles(tmpl + ".html")
+	t.Execute(w, p)
 }
