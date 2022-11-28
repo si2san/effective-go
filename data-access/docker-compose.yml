@@ -1,0 +1,15 @@
+version: "2"
+services:
+  db:
+    image: mysql:8.0
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: data-access
+      MYSQL_PASSWORD: data-access
+      MYSQL_DATABASE: data-access
+    volumes:
+      - $PWD/data:/var/lib/mysql
+      - $PWD/scripts:/scripts
+
